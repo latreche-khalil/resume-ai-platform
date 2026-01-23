@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import logging
 
+# Import routers
+from endpoints.upload import router as upload_router
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,6 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include routers
+app.include_router(upload_router)
+
 
 @app.get("/")
 async def root():
@@ -30,7 +36,11 @@ async def root():
     return {
         "message": "Resume AI Platform API",
         "version": "1.0.0",
-        "docs": "/docs"
+        "docs": "/docs",
+        "endpoints": {
+            "upload": "/api/upload",
+            "health": "/health"
+        }
     }
 
 
@@ -46,8 +56,9 @@ async def health_check():
 
 @app.on_event("startup")
 async def startup():
-    logger.info("Resume AI Backend Started")
-    logger.info(" API Docs: http://localhost:8000/docs")
+    logger.info("🚀 Resume AI Backend Started")
+    logger.info("📚 API Docs: http://localhost:8000/docs")
+    logger.info("📤 Upload endpoint: http://localhost:8000/api/upload")
 
 
 if __name__ == "__main__":
