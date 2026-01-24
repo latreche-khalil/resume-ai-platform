@@ -1,52 +1,64 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
-import logging
+"""
+Resume AI Platform - Main Application
 
-# Import routers
+FastAPI backend for AI-powered resume analysis with OCR support.
+"""
+
+import logging
+from datetime import datetime
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from endpoints.upload import router as upload_router
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
-# Initialize app
+# Initialize FastAPI application
 app = FastAPI(
     title="Resume AI Platform",
     description="AI-powered resume analysis with explainable feedback",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
-# CORS setup
+# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include routers
+# Register routers
 app.include_router(upload_router)
 
 
-@app.get("/")
+@app.get("/", tags=["info"])
 async def root():
-    """API info endpoint"""
+    """API information endpoint."""
     return {
-        "message": "Resume AI Platform API",
+        "name": "Resume AI Platform API",
         "version": "1.0.0",
-        "docs": "/docs",
+        "documentation": "/docs",
         "endpoints": {
             "upload": "/api/upload",
+            "extract": "/api/extract/{file_id}",
             "health": "/health"
         }
     }
 
 
-@app.get("/health")
+@app.get("/health", tags=["monitoring"])
 async def health_check():
-    """Health check for monitoring"""
+    """Health check endpoint for monitoring."""
     return {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
@@ -56,16 +68,11 @@ async def health_check():
 
 @app.on_event("startup")
 async def startup():
-    logger.info("🚀 Resume AI Backend Started")
-    logger.info("📚 API Docs: http://localhost:8000/docs")
-    logger.info("📤 Upload endpoint: http://localhost:8000/api/upload")
+    """Application startup handler."""
+    logger.info(" Resume AI Backend Started")
+    logger.info(" API Docs: http://localhost:8000/docs")
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
-    )
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

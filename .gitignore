@@ -1,24 +1,47 @@
-# System
+# System files
 .DS_Store
 Thumbs.db
+*.log
 
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
 venv/
+env/
 .env
+.venv/
 .pytest_cache/
-uploads/
+*.egg-info/
+dist/
+build/
+.eggs/
 
-# Node.js
+# Uploads (user data)
+uploads/
+backend/uploads/
+
+# Node.js (for future frontend)
 node_modules/
 .next/
 dist/
 coverage/
+.npm
 
-# Project Planning & Reports
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Project Planning (internal docs)
 technical_report.md
 implementation_plan.md
 development_schedule.md
 task.md
 
+# Test files
+test_*.txt
+test_*.docx
