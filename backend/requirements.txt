@@ -4,3 +4,11 @@ python-multipart==0.0.6
 python-dotenv==1.0.0
 pydantic==2.5.3
 pydantic-settings==2.1.0
+
+# Day 4: File Parsing
+pdfplumber==0.10.3
+python-docx==1.1.0
+
+# Day 5: OCR
+pytesseract==0.3.10
+Pillow==10.2.0
